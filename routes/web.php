@@ -18,3 +18,11 @@ $router->get('/', function () use ($router) {
 });
 
 $router->post('/upload', 'ExampleController@upload');
+# Core API
+$router->group(['prefix' => 'api'], function($router){
+    $router->post('login', 'AuthController@login');
+    $router->group(['middleware' => 'auth'], function($router){
+        $router->get('me', 'AuthController@me');
+        $router->post('logout', 'AuthController@logout');
+    });
+});
