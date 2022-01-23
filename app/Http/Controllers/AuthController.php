@@ -3,11 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\Response;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    public function register(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "name"     => "required|string",
+            "email"    => "required|string|email|unique:users",
+            "password" => "required|string|min:4|confirmed",
+        ]);
+        if ($validator->fails()) {
+            return Response::error(422, $validator->errors()->first());
+        }
+        try {
+            $user = User::create($request->all());
+            return Response::success(201, "User registerd", $user);
+        } catch (\Throwable $th) {
+            return Response::error(500, $th->getMessage());
+        }
+    }
+
     public function login(Request $request)
     {
         $this->validate($request, [

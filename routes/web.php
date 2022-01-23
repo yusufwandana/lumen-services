@@ -20,6 +20,7 @@ $router->get('/', function () use ($router) {
 $router->post('/upload', 'ExampleController@upload');
 # Core API
 $router->group(['prefix' => 'api'], function($router){
+    $router->post('register', 'AuthController@register');
     $router->post('login', 'AuthController@login');
     $router->group(['middleware' => 'auth'], function($router){
         $router->get('me', 'AuthController@me');
